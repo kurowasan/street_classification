@@ -3,6 +3,9 @@ import street_languages
 city_info_dict = {}
 city_info_dict['montreal'] = {'geofile': 'montreal_canada/test_montreal_canada-roads.geojson'}
 #city_info_dict['montreal'] = {'geofile': 'montreal_canada/montreal_canada-roads.geojson'}
+city_info_dict['quebec'] = {'geofile': 'quebec_canada/quebec_canada-roads.geojson'}
+city_info_dict['toronto'] = {'geofile': 'toronto_canada/toronto_canada-roads.geojson'}
+
 city_info_dict['calgary'] = {'geofile': 'calgary_canada/calgary_canada-roads.geojson'}
 city_info_dict['fredericton'] = {'geofile': 'fredericton_canada/fredericton_canada-roads.geojson'}
 city_info_dict['halifax'] = {'geofile': 'halifax_canada/halifax_canada-roads.geojson'}
@@ -11,7 +14,9 @@ city_info_dict['kamloops'] = {'geofile': 'kamloops_canada/kamloops_canada-roads.
 city_info_dict['mississauga'] = {'geofile': 'mississauga_canada/mississauga_canada-roads.geojson'}
 city_info_dict['ottawa'] = {'geofile': 'ottawa_canada/ottawa_canada-roads.geojson'}
 
+city_info_dict['boston'] = {'geofile': 'boston_massachusetts/boston_massachusetts-roads.geojson'}
 city_info_dict['hampton-roads'] = {'geofile': 'hampton-roads_virginia/hampton-roads_virginia-roads.geojson'}
+city_info_dict['pittsburgh'] = {'geofile': 'pittsburgh_pennsylvania/pittsburgh_pennsylvania-roads.geojson'}
 
 
 def plot_cities(city_list):
@@ -41,5 +46,5 @@ def plot_cities(city_list):
     print cities_lang_frac_fr
 
 if __name__ == "__main__":
-    plot_cities(['montreal', ])
+    plot_cities(['toronto', ])
     #plot_cities(['ottawa', ])
