@@ -6,8 +6,10 @@ import collections
 import math as m
 import re
 
-df_english = pd.read_csv("/Users/jean-francoisrajotte/projects/street_lang/language_names/english_names.txt", sep = ",")
-df_french = pd.read_csv("/Users/jean-francoisrajotte/projects/street_lang/language_names/french_names.txt", sep = ",")
+#df_english = pd.read_csv("/Users/jean-francoisrajotte/projects/street_lang/language_names/english_names.txt", sep = ",")
+#df_french = pd.read_csv("/Users/jean-francoisrajotte/projects/street_lang/language_names/french_names.txt", sep = ",")
+df_english = pd.read_csv("/Users/jfr/projects/street_lang/language_names/english_names.txt", sep = ",")
+df_french = pd.read_csv("/Users/jfr/projects/street_lang/language_names/french_names.txt", sep = ",")
 
 
 def getBigramFrequency(df, n=2):
