@@ -13,8 +13,7 @@ df_french = pd.read_csv("/Users/jfr/projects/street_lang/language_names/french_n
 
 
 def getBigramFrequency(df, n=2):
-    """Get the frequency for a defined number of letter
-    """
+    """Get the frequency for a defined number of letter."""
     bigramFreq = {}
     nbOccurence = 0
 
@@ -94,21 +93,25 @@ bigramDiff = collections.OrderedDict({})
 for key,value in bigramFrench.items():
     bigramDiff[key] = (bigramFrench[key] - bigramEnglish[key]) * m.fabs(bigramFrench[key] - bigramEnglish[key])
 
+
 def clean_str(word):
-    """Remove generic stuff from the street
-        Like Rue, Avenue...
+    """Remove generic stuff from the street.
+    Like Rue, Avenue...
     """
     tosub = 'Rue|Avenue|Chemin|Canal|Place|Rang|Boulevard|Autoroute|Pont|Croissant|De la |des |du |de | road| | Street'
     return re.sub(tosub, '', word)
 
 
 def whichLanguage(word):
+    """Return language score.
+    Positive means more likely to be french
+    Negative means more likely to be english
+    """
     freqWord = list()
-    mse = 0
-    mse2 = 0
 
     for nbLetters in range(3):
-        freqWord.append(getBigramFrequencySingleWord(clean_str(word), n=(nbLetters + 1)))
+        freqWord.append(getBigramFrequencySingleWord(clean_str(word),
+                        n=(nbLetters + 1)))
 
     bigram = 0
     trigram = 0

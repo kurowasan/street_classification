@@ -12,7 +12,7 @@ class City(object):
         if testing:
             ntest = 1000
             print('Testing mode using only {} entries'.format(ntest))
-            self.df = self.df.head(n=10)
+            self.df = self.df.head(n=100)
         self.df = self.df[~self.df['name'].isin([None, ])]
         self.street_en = None
         self.street_fr = None
