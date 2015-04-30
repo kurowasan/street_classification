@@ -6,6 +6,7 @@ import csv
 import os
 import urllib
 import zipfile
+import json
 
 import street_languages
 
@@ -115,7 +116,7 @@ def get_all_processed_cities(csvfname):
             city_list.append(row['city'])
     return city_list
 
-def locate_geofile(city):
+def locate_local_geofile(city):
     """Locating the geojson file
     search in the data/ subdirectory
     """
@@ -137,8 +138,60 @@ def plot_streets(cityname):
         geofname = locate_geofile(cityname)
     city = street_languages.City(geofname, cityname)
 
+def get_all_north_american_cities(shortnames=False):
+    """Return all north american cities available at mapzen."""
+    city_json = 'mapzen_cities.json'
+    city_dict = json.load(open(city_json))
+    all_na_cities = city_dict['regions']['north_america']['cities'].keys()
+    if not shortnames:
+        return all_na_cities
+    # Remove the trailing _* for short names
+    short_names = []
+    for ilong_name in all_na_cities:
+        short_names.append(ilong_name.split('_')[:-1])
+    return short_names
+
+
+def download_and_get_geofile_name(city):
+    """Download the imposm-geojson files from mapzen.
+
+    It query a json file of all mapzen available files
+    downloaded from:
+    https://raw.githubusercontent.com/mapzen/metroextractor-cities/master/cities.json
+    To avoid collisions, the city is only search in north america
+    """
+    all_cities = get_all_north_american_cities()
+    potential_cities = [c for c in all_cities if city in c]
+    if len(potential_cities)<1:
+        raise ValueError
+    if len(potential_cities)>1:
+        print('\n\nWARNING: more than one city like {}:'.format(city))
+        print(potential_cities)
+        print('Using the first one: {}'.format(potential_cities[0]))
+    download_data(potential_cities[0])
+
+
+def get_geofilename(city, download=False):
+    """Return the file containing the geojson info."""
+    try:
+        geofname = city_info_dict[city]['geofile']
+        if not os.path.exists(geofname):
+            print('Skipping city {}'.format(city))
+            raise KeyError
+        return geofname
+    except KeyError:
+        pass
+    try:
+        return locate_local_geofile(city)
+    except ValueError:
+        if download:
+            download_and_get_geofile_name(city)
+    return locate_local_geofile(city)
+
+
 def plot_cities(city_list='all'):
-    """Plotting cities from a list
+    """Plotting cities from a list.
+
     if city_list = all, use all city in csv file
     """
     csvname = 'city_stats/city_summary.csv'
@@ -152,13 +205,7 @@ def plot_cities(city_list='all'):
     frac_en = []
     fcsv = open(csvname, 'a')
     for icity in city_list:
-        try:
-            igeofname = city_info_dict[icity]['geofile']
-            if not os.path.exists(igeofname):
-                print('Skipping city {}'.format(icity))
-                continue
-        except KeyError:
-            igeofname = locate_geofile(icity)
+        igeofname = get_geofilename(icity, True)
         icity_info = get_city_stats(igeofname, icity)
         istr_en = float(icity_info['english'])
         istr_fr = float(icity_info['french'])
@@ -179,7 +226,7 @@ def plot_cities(city_list='all'):
 if __name__ == "__main__":
     #citylist = city_info_dict.keys()
     #plot_cities(['montreal', ])
-    #plot_cities(['kansas-city-lawrence-topeka',])
+    #plot_cities(['albany',])
     #plot_cities(['vancouver', 'victoria', 'windsor'])
-    #plot_cities()
-    download_data('albany_new-york')
+    plot_cities()
+    #print get_all_north_american_cities(True)
