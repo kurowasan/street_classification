@@ -36,6 +36,7 @@ city_info_dict['louisville'] = {'geofile': 'data/louisville_kentucky/louisville_
 city_info_dict['duluth'] = {'geofile': 'data/duluth_minnesota/duluth_minnesota-roads.geojson'}
 city_info_dict['memphis'] = {'geofile': 'data/memphis_tennessee/memphis_tennessee-roads.geojson'}
 city_info_dict['charlotte'] = {'geofile': 'data/charlotte_north-carolina/charlotte_north-carolina-roads.geojson'}
+city_info_dict['new-york'] = {'geofile': 'data/new-york_new-york/new-york_new-york-roads.geojson'}
 
 
 def download_data(basename):
@@ -116,13 +117,15 @@ def get_all_processed_cities(csvfname):
             city_list.append(row['city'])
     return city_list
 
+
 def locate_local_geofile(city):
     """Locating the geojson file
     search in the data/ subdirectory
     """
-    similar_cities = [s for s in os.listdir('data/') if city in s]
+    data_dir = 'data/'
+    similar_cities = [s for s in os.listdir(data_dir) if city in s]
     if len(similar_cities) == 1:
-        return os.path.join('data/', similar_cities[0],
+        return os.path.join(data_dir, similar_cities[0],
                             "{}-roads.geojson".format(similar_cities[0]))
     if len(similar_cities) > 1:
         print('!!Error: more than one possible choice for city:')
@@ -148,7 +151,9 @@ def get_all_north_american_cities(shortnames=False):
     # Remove the trailing _* for short names
     short_names = []
     for ilong_name in all_na_cities:
-        short_names.append(ilong_name.split('_')[:-1])
+        if ilong_name == 'grand-rapids-holland-muskegon_michigan':
+            continue
+        short_names.append(ilong_name.split('_')[0])
     return short_names
 
 
@@ -226,7 +231,7 @@ def plot_cities(city_list='all'):
 if __name__ == "__main__":
     #citylist = city_info_dict.keys()
     #plot_cities(['montreal', ])
-    #plot_cities(['albany',])
+    #plot_cities(['new-york',])
     #plot_cities(['vancouver', 'victoria', 'windsor'])
-    plot_cities()
+    plot_cities(get_all_north_american_cities(True))
     #print get_all_north_american_cities(True)
